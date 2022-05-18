@@ -1,0 +1,116 @@
+// Geometry file for the cylindrical NaI detector used for testing of BTO
+
+Name BTO_CsIDet
+Version 1.0
+
+SurroundingSphere 10  0.0  0.0  0.0  10.0
+
+
+// Include section
+
+// NEEDS THIS LINE TO VIEW ALONE:
+// Include Materials.geo
+Include COSIMaterials.geo
+
+
+// The Mother Volume of the CsI Detector Configuration:
+Volume World_Volume
+World_Volume.Material Vacuum
+World_Volume.Visibility 0
+#TUBS shape: Rmin, Rmax, half height, phi1, phi2
+World_Volume.Shape TUBS 0 100 500 0 360
+// NEEDS THIS LINE TO VIEW ALONE:
+World_Volume.Mother 0
+
+
+// The Consisting Parts:
+
+// Aluminium
+Volume Det_Aluminium
+Det_Aluminium.Material Aluminium
+Det_Aluminium.Shape TUBS 5.45 5.7 3.85 0 360
+#does position need to reflect shape?? (have the same components)
+Det_Aluminium.Position 0.0 0.0 0.0
+Det_Aluminium.Visibility 1
+Det_Aluminium.Color 2
+Det_Aluminium.Mother World_Volume
+
+// Aluminium bottom
+Volume Det_AluminiumB
+Det_AluminiumB.Material Aluminium
+Det_AluminiumB.Shape TUBS 0 5.45 0.04 0 360
+Det_AluminiumB.Position 0.0 0.0 -3.81
+Det_AluminiumB.Visibility 1
+Det_AluminiumB.Color 2
+Det_AluminiumB.Mother World_Volume
+
+
+// Glass
+Volume Det_Glass
+Det_Glass.Material Glass
+Det_Glass.Shape TUBS 0 5.1 0.1 0 360
+Det_Glass.Position 0.0 0.0 1.605
+Det_Glass.Visibility 1
+Det_Glass.Color 1
+Det_Glass.Mother World_Volume
+
+
+// CsI Crystal Cell:
+Volume CsICrystal
+CsICrystal.Material CsI
+CsICrystal.Visibility 1
+CsICrystal.Color 4
+CsICrystal.Shape TUBS 0 5.1 2.55 0 360
+CsICrystal.Position 0.0 0.0 -1.045
+CsICrystal.Mother World_Volume
+##add detector description
+
+// Reflective Coating:
+Volume RefCoat
+RefCoat.Material Al2O3
+RefCoat.Visibility 1
+RefCoat.Color 7
+RefCoat.Shape TUBS 5.1 5.45 2.6375 0 360
+RefCoat.Position 0.0 0.0 -0.9575
+RefCoat.Mother World_Volume
+
+// Reflective Coating Bottom:
+Volume RefCoatBot
+RefCoatBot.Material Al2O3
+RefCoatBot.Visibility 1
+RefCoatBot.Color 7
+RefCoatBot.Shape TUBS 0 5.45 0.0875 0 360
+##NOTE when determining the distance to drop, have to half (since it places in the cneter of an object)
+RefCoatBot.Position 0.0 0.0 -3.6825
+RefCoatBot.Mother World_Volume
+
+
+// Built-in Amplifier:
+#check with Andreas if this is a good addition...
+Volume CircBoard
+CircBoard.Material CircuitBoard
+CircBoard.Visibility 1
+CircBoard.Color 9
+CircBoard.Shape TUBS 0 5.45 1.0225 0 360
+CircBoard.Position 0.0 0.0 2.8275
+CircBoard.Mother World_Volume
+
+#add here examples for scintillator detector
+
+
+MDACS   BTO
+
+BTO.SensitiveVolume     CsICrystal
+#BTO.DetectorVolume     CsICrystal
+
+BTO.EnergyResolution  Gauss  10   10    10.0
+BTO.EnergyResolution    Gauss 100  100  10.0
+BTO.TriggerThreshold    200.0
+BTO.NoiseThresholdEqualsTriggerThreshold true
+BTO.FailureRate         0.0
+
+
+Trigger VT01
+VT01.Veto false
+VT01.TriggerByDetector true
+VT01.Detector BTO 1
